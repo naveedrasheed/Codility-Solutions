@@ -1,39 +1,45 @@
-// you can use includes, for example:
 // #include <algorithm>
+#include <vector>
 #include <stack>
 #include <climits>
+#include <iostream>
 
-// you can write to stdout for debugging purposes, e.g.
-// cout << "this is a debug message" << endl;
+using namespace std;
 
-int solution(vector<int> &A, vector<int> &B) {
+int solution(std::vector<int> &A, std::vector<int> &B) {
     // write your code in C++14 (g++ 6.2.0)
     stack<int> fish;
-    int fish_size = INT_MAX;
-    int active_fish;
+    stack<int> size;
+    int fish_alive = 0;
     
-    fish.push(B[0]);
-    fish_size = A[0];
-        
-    for (int i = 1; i < B.size(); i++)
+    for (int i = 0; i < (int)B.size(); i++)
     {
-        active_fish = fish.top();
-        
-        if (active_fish && B[i] == 0)
+        if (B[i] == 0 && fish.empty())
         {
-            if (fish_size < A[i])
+            fish_alive++;
+        }
+        else
+        {
+            if (B[i] == 1)
             {
-                fish.pop();
+                fish.push(B[i]); 
+                size.push(A[i]);
             }
             else
             {
-                continue;
+                while (!fish.empty() && size.top() < A[i] && fish.top() != B[i])
+                {
+                    fish.pop(); 
+                    size.pop();
+                }
+
+                if (B[i] == 0 && fish.empty())
+                {
+                    fish_alive++;
+                }
             }
-        }
-        
-        fish.push(B[i]);
-        fish_size = A[i];
+        }        
     }
-    
-    return (fish.size());
+       
+    return (fish.size()+fish_alive);
 }
